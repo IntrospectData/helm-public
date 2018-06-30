@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  publish_chart:
+    docker:
+      - image: circleci/python:3.6.4
+    working_directory: ~/id-microservice
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "2c:94:a8:a2:63:82:b5:b0:96:16:71:54:d4:e5:1c:a8"
+      - checkout
+      - run:
+          name: download helm if not present
+          command: |
+            wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz -O /tmp/helm.tar.gz
+            sudo tar xvf /tmp/helm.tar.gz -C /usr/local/bin/ --strip 1
+      - run:
+          name: lint all charts
+          command: |
+            array=(src/*)
+            for dir in "${array[@]}"; do echo "Linting $dir"; helm lint $dir; done;
+      - run:
+          name: Package all charts
+          command: |
+            array=(src/*)
+            for dir in "${array[@]}"; do echo "Packaging $dir"; helm package $dir --save=false --destination=charts/; done;
+      - run:
+          name: Re-index the helm repo
+          command: |
+            echo "Re-indexing the helm repo"
+            helm repo index . --merge index.yaml
+      - run:
+          name: push
+          command: |
+            ssh-add ~/.ssh/id_rsa_2c94a8a26382b5b096167154d4e51ca8
+            git config --global user.email "dev@introspectdata.com"
+            git config --global user.name "CircleCI Build"
+            git add index.yaml
+            git add charts/*.tgz
+            git commit -am "Helm repository asset commit $(date) [skip ci]"
+            git push origin $CIRCLE_BRANCH
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - publish_chart
