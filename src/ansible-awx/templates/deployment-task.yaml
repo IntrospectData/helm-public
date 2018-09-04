@@ -1,0 +1,70 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ansible-awx.fullname" . }}-awx-task
+  labels:
+    app: {{ template "ansible-awx.name" . }}-awx-task
+    chart: {{ template "ansible-awx.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ansible-awx.name" . }}-awx-task
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ansible-awx.name" . }}-awx-task
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: awx-application-config
+          configMap:
+            name: {{ template "ansible-awx.fullname" . }}-awx-config
+            items:
+              - key: awx_settings
+                path: settings.py
+      containers:
+        - name: {{ .Chart.Name }}-awx-task
+          image: "{{ .Values.awx_task.image.repository }}:{{ .Values.awx_task.image.tag }}"
+          imagePullPolicy: {{ .Values.awx_task.image.pullPolicy }}
+          securityContext:
+            privileged: true
+          command:
+            - /usr/bin/launch_awx_task.sh
+          resources:
+{{ toYaml .Values.awx_task.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /etc/tower
+              name: awx-application-config
+          envFrom:
+            - configMapRef:
+                name: {{ template "ansible-awx.fullname" . }}-awx-env
+            - secretRef:
+                name: {{ template "ansible-awx.fullname" . }}-awx-env
+          env:
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-rabbitmq
+                  key: rabbitmq-password
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
+
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

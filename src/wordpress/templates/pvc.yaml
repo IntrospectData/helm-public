@@ -1,0 +1,28 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "id-wordpress.fullname" . }}
+  labels:
+    app: {{ template "id-wordpress.name" . }}
+    chart: {{ template "id-wordpress.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode | quote }}
+  resources:
+    requests:
+{{- if and .Values.nfs-server-provisioner.enabled .Values.nfs-server-provisioner.persistence.enabled }}
+      storage: {{ .Values.nfs-server-provisioner.persistence.size }}
+{{- else }}
+      storage: {{ .Values.persistence.size | quote }}
+{{- end }}
+{{- if and .Values.nfs-server-provisioner.enabled .Values.nfs-server-provisioner.storageClass.create }}
+  storageClassName: {{ .Values.nfs-server-provisioner.storageClass.name | quote }}
+{{- else if and  .Values.persistence.storageClass (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: {{ .Values.persistence.storageClass | quote }}
+{{- end }}
+{{- end }}

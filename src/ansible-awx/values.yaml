@@ -1,0 +1,104 @@
+awx_web:
+  replicaCount: 1
+  image:
+    repository: ansible/awx_web
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    internalPort: 8052
+    externalPort: 8052
+  ingress:
+    enabled: true
+    hosts:
+      - awx.introspectdev.io
+    annotations:
+      kubernetes.io/ingress.class: nginx-private
+      kubernetes.io/tls-acme: "true"
+    tls:
+      - hosts:
+          - awx.introspectdev.io
+        secretName: awx-introspectdev-io
+  resources:
+    requests:
+      memory: 1024Mi
+      cpu: 500m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+awx_task:
+  replicaCount: 2
+  image:
+    repository: ansible/awx_task
+    tag: latest
+    pullPolicy: Always
+  resources:
+    requests:
+      memory: 2048Mi
+      cpu: 1500m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+
+awx_secret_key:
+
+default_admin_user: admin
+default_admin_password:
+
+#
+# Dependency Charts
+#
+
+postgresql:
+  postgresUser: awxuser
+  postgresPassword: "Password12345"
+  postgresDatabase: awx
+  port: "5432"
+  persistence:
+    enabled: false
+    size: 32Gi
+    # storageClass: "-"
+    subPath: "postgresql-db"
+    mountPath: /var/lib/postgresql/data/pgdata
+  metrics:
+    enabled: true
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+memcached:
+  replicaCount: 3
+  pdbMinAvailable: 2
+  AntiAffinity: "hard"
+  resources:
+    requests:
+      memory: 1024Mi
+      cpu: 500m
+  serviceAnnotations: {}
+  #  prometheus.io/scrape: "true"
+  #  prometheus.io/port: "9150"
+  metrics:
+    enabled: false
+
+
+rabbitmq:
+  rabbitmq:
+    username: awxuser
+    password: "RabbitPassword12345"
+    nodePort: "5672"
+  persistence:
+    enabled: false
+    # storageClass: "-"
+    size: 16Gi
+  ingress:
+    enabled: true
+    tls: true
+    hostName: rabbitmq.awx.introspectdev.io
+    tlsSecret: rabbitmq-awx-introspectdev-io
+    annotations:
+      kubernetes.io/ingress.class: nginx-private
+      kubernetes.io/tls-acme: "true"

@@ -1,0 +1,12 @@
+dependencies:
+- name: percona-xtradb-cluster
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 0.1.5
+- name: nfs-server-provisioner
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 0.1.5
+- name: memcached
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 2.3.0
+digest: sha256:85b6808ecef4cc346b4c0cd7b92964edd191eead61e2bdb8dce34b0ecba059dc
+generated: 2018-09-02T11:36:46.491982568-07:00

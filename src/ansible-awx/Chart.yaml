@@ -1,0 +1,9 @@
+apiVersion: v1
+appVersion: "1.0"
+description: A Helm chart for Kubernetes
+name: ansible-awx
+version: 0.1.0
+icon: https://raw.githubusercontent.com/ansible/awx-logos/master/awx/ui/client/assets/logo-login.svg
+sources:
+  - https://github.com/ansible/awx
+  - https://github.com/arthur-c/ansible-awx-helm-chart/

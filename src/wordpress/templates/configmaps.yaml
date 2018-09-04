@@ -1,0 +1,40 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "id-wordpress.fullname" . }}-php
+  labels:
+    app: {{ template "id-wordpress.name" . }}
+    chart: {{ template "id-wordpress.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  php.ini: |
+    memory_limit = 256M
+    upload_max_size = 256M
+    post_max_size = 256M
+    upload_max_filesize = 256M
+    max_execution_time = 600
+    max_input_time = 1200
+    opcache.enable = 1
+    opcache.validate_timestamps = 1
+    opcache.revalidate_freq = 60
+    opcache.max_accelerated_files = 10000
+    opcache.memory_comsumption = 64
+    opcache.interned_strings_buffer = 8
+    opcache.fast_shutdown = 1
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "id-wordpress.fullname" . }}-wp
+  labels:
+    app: {{ template "id-wordpress.name" . }}
+    chart: {{ template "id-wordpress.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  WORDPRESS_DB_HOST: {{ .Release.Name }}-pxc.{{ .Release.Namespace }}:3306
+{{- if .Values.env }}
+{{ toYaml .Values.env | indent 2 }}
+{{- end }}

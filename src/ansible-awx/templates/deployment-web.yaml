@@ -1,0 +1,80 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ansible-awx.fullname" . }}-awx-web
+  labels:
+    app: {{ template "ansible-awx.name" . }}-awx-web
+    chart: {{ template "ansible-awx.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ansible-awx.name" . }}-awx-web
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ansible-awx.name" . }}-awx-web
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: awx-application-config
+          configMap:
+            name: {{ template "ansible-awx.fullname" . }}-awx-config
+            items:
+              - key: awx_settings
+                path: settings.py
+      containers:
+        - name: {{ .Chart.Name }}-awx-web
+          image: "{{ .Values.awx_web.image.repository }}:{{ .Values.awx_web.image.tag }}"
+          imagePullPolicy: {{ .Values.awx_web.image.pullPolicy }}
+          securityContext:
+            privileged: true
+          ports:
+            - name: http
+              containerPort: {{ default "8052" .Values.awx_web.service.internalPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.awx_web.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /etc/tower
+              name: awx-application-config
+          envFrom:
+            - configMapRef:
+                name: {{ template "ansible-awx.fullname" . }}-awx-env
+            - secretRef:
+                name: {{ template "ansible-awx.fullname" . }}-awx-env
+          env:
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-rabbitmq
+                  key: rabbitmq-password
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgresql
+                  key: postgres-password
+
+    {{- with .Values.awx_web.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.awx_web.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.awx_web.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

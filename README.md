@@ -1,5 +1,7 @@
 # Introspect Data Helm Chart Repository
 
+Please note - these are meant to be used as examples for specific usecases. In general, we don't advise using these charts as-is for most environments, but figured they were worth sharing given the amount of effort we put into it!
+
 ## Prerequisites
 
 *   [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed
