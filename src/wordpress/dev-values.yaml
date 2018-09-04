@@ -97,7 +97,7 @@ percona-xtradb-cluster:
   mysqlRootPassword: "3755GuzWP6dFubm3g3mY3Pwn"
   xtraBackupPassword: "8juqGFajT9aBmyOS3jQ3UXeO"
   persistence:
-    enabled: true
+    enabled: false
     storageClass: nfs-04
     size: 64Gi
   metricsExporter: true

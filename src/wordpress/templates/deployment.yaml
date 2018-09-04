@@ -34,8 +34,6 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/usr/local/bin/wp_run.sh"]
-          args: ["apache2-foreground"]
           envFrom:
             - configMapRef:
                 name: {{ template "id-wordpress.fullname" . }}-wp
