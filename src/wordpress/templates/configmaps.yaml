@@ -10,10 +10,10 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   php.ini: |
-    memory_limit = 256M
-    upload_max_size = 256M
-    post_max_size = 256M
-    upload_max_filesize = 256M
+    memory_limit = {{ index .Values "php.max-upload-size" | default "256M" }}
+    upload_max_size = {{ index .Values "php.max-upload-size" | default "256M" }}
+    post_max_size = {{ index .Values "php.max-upload-size" | default "256M" }}
+    upload_max_filesize = {{ index .Values "php.max-upload-size" | default "256M" }}
     max_execution_time = 600
     max_input_time = 1200
     opcache.enable = 1
@@ -23,6 +23,9 @@ data:
     opcache.memory_comsumption = 64
     opcache.interned_strings_buffer = 8
     opcache.fast_shutdown = 1
+{{- if (index .Values "php.additional-ini") }}
+{{ index .Values "php.additional-ini" | indent 4 }}
+{{- end }}
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -34,7 +37,11 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+{{- if (index .Values "percona-xtradb-cluster.enabled") }}
   WORDPRESS_DB_HOST: {{ .Release.Name }}-pxc.{{ .Release.Namespace }}:3306
+  WORDPRESS_DB_USER: {{ index .Values "percona-xtradb-cluster.mysqlUser" }}
+  WORDPRESS_DB_NAME: {{ index .Values "percona-xtradb-cluster.mysqlDatabase" }}
+{{- end }}
 {{- if .Values.env }}
 {{ toYaml .Values.env | indent 2 }}
 {{- end }}

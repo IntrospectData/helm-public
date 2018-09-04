@@ -13,13 +13,13 @@ spec:
     - {{ .Values.persistence.accessMode | quote }}
   resources:
     requests:
-{{- if and .Values.nfs-server-provisioner.enabled .Values.nfs-server-provisioner.persistence.enabled }}
-      storage: {{ .Values.nfs-server-provisioner.persistence.size }}
+{{- if and (index .Values "nfs-server-provisioner.enabled") (index .Values "nfs-server-provisioner.persistence.enabled") }}
+      storage: {{ index .Values "nfs-server-provisioner.persistence.size" }}
 {{- else }}
       storage: {{ .Values.persistence.size | quote }}
 {{- end }}
-{{- if and .Values.nfs-server-provisioner.enabled .Values.nfs-server-provisioner.storageClass.create }}
-  storageClassName: {{ .Values.nfs-server-provisioner.storageClass.name | quote }}
+{{- if and (index .Values "nfs-server-provisioner.enabled") (index .Values "nfs-server-provisioner.storageClass.create") }}
+  storageClassName: {{ index .Values "nfs-server-provisioner.storageClass.name" | quote }}
 {{- else if and  .Values.persistence.storageClass (eq "-" .Values.persistence.storageClass) }}
   storageClassName: ""
 {{- else }}

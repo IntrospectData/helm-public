@@ -1,5 +1,15 @@
 apiVersion: v1
-appVersion: "1.0"
-description: A Helm chart for Kubernetes
-name: id-wordpress
-version: 0.1.0
+appVersion: 4.9.8
+description: A combined helm chart to deploy a highly scalable wordpress environment using perconadb
+name: wordpress
+version: 0.1.2
+icon: https://introspectdata.com/wp-content/uploads/2018/07/graphonly-orange-75px.png
+home: https://github.com/IntrospectData/helm-public/tree/master/src/wordpress
+sources:
+  - https://github.com/helm/charts/tree/master/stable/wordpress
+  - https://github.com/helm/charts/tree/master/stable/percona-xtradb-cluster
+  - https://github.com/helm/charts/tree/master/stable/nfs-server-provisioner
+maintainers:
+  - name: Patrick McClory
+    email: pmdev@introspectdata.com
+    url: https://introspectdata.com

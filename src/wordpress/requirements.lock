@@ -5,8 +5,5 @@ dependencies:
 - name: nfs-server-provisioner
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 0.1.5
-- name: memcached
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 2.3.0
-digest: sha256:85b6808ecef4cc346b4c0cd7b92964edd191eead61e2bdb8dce34b0ecba059dc
-generated: 2018-09-02T11:36:46.491982568-07:00
+digest: sha256:1b3ce3e5f0363dc7fed0b80402af181d51e8e869d0d0e606e17fd29ef328abc8
+generated: 2018-09-04T12:06:57.920486751-07:00

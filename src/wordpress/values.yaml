@@ -1,7 +1,3 @@
-# Default values for id-wordpress.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 image:
@@ -13,46 +9,47 @@ service:
   type: ClusterIP
   port: 80
 
+# used only if percona-xtradb-cluster is disabled
+externalDB:
+  host: ""
+  name: ""
+  user: ""
+  password: ""
+
+php:
+  max-upload-size: 256M # should correspond to what you configure for your ingress
+  additional-ini: "" # ability to add multi-line string with additional php.ini contents
+
 ingress:
   enabled: true
-  annotations:
-    ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-    kubernetes.io/ingress.class: nginx-private-test
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
-    nginx.ingress.kubernetes.io/session-cookie-hash: "md5"
+  annotations: {}
+    ## allow larger uploads/requests than default 2m
+    # nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    # kubernetes.io/ingress.class: nginx
+    ## cert-manager for ACME/LetsEncrypt - autogenerate cert
+    # kubernetes.io/tls-acme: "true"
+    ## Force SSL redirects for nginx-ingress
+    # ingress.kubernetes.io/force-ssl-redirect: "true"
+    ## sticky sessions with nginx-ingress
+    # nginx.ingress.kubernetes.io/affinity: "cookie"
+    # nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
+    # nginx.ingress.kubernetes.io/session-cookie-hash: "md5"
   path: /
   hosts:
-    - cleanslate.introspectdev.io
+    - domain.tld
   tls:
-    - secretName: cleanslate-introspectdev-io
+    - secretName: domain-tld-tls
       hosts:
-        - cleanslate.introspectdev.io
+        - domain.tld
 persistence:
   enabled: true
-  ## wordpress data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  storageClass: "nfs-04"
-  ##
-  ## If you want to reuse an existing claim, you can pass the name of the PVC using
-  ## the existingClaim variable
-  # existingClaim: your-claim
+  storageClass: "-" # specified value only works if nfs-server-provisioner is disabled or does not create a storageClass
   accessMode: ReadWriteMany
   size: 32Gi
 
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+resources:
+  requests:
   # limits:
   #  cpu: 100m
   #  memory: 128Mi
@@ -67,20 +64,20 @@ tolerations: []
 affinity: {}
 
 env:
-  WORDPRESS_DB_USER: wordpress
-  WORDPRESS_DB_NAME: wordpress
   WORDPRESS_TABLE_PREFIX: wp_
   WORDPRESS_DEBUG: "0"
 
+# you can get 'fresh salt' from here: https://api.wordpress.org/secret-key/1.1/salt/
 secrets:
-  WORDPRESS_AUTH_KEY: "`)bnh-sgJ5<wT/W}<XXJtsjf(Go@^3F?_bLQ/@pcxS$221[ra76&(72_}l;{I)#p"
-  WORDPRESS_SECURE_AUTH_KEY: "L@@tzvp#]hJ}1*]6P?b$A`b|elR`7H;*Tab^>erAwLroo*E_O0|;[cB1nAk_B)k1"
-  WORDPRESS_LOGGED_IN_KEY: "P)}v@-8FwRq2=L?({^8C6p:,Z^JUsNXq`>5r0cu-Nb>())2``,qa_8/I6^lspd:A"
-  WORDPRESS_NONCE_KEY: "rD}JSHanNw}Jrh&pgwTz<q?Qls8qyuqSKTBLRM6C$UR/:^WA*RF4a|IoG0+SF4OQ"
-  WORDPRESS_AUTH_SALT: "tu(0{$rBz^ewadM/yE4FyY)j=z(:aCCS9cF,4vI5??quUFr)q!:!.;hVDJ^&OBEI"
-  WORDPRESS_SECURE_AUTH_SALT: "nckG4&$RQ-_0}UBKoVyP6W[RNB5LIV#Rxs#<NFeG6=:>;5%bO*2>g{ujI/2*2nP["
-  WORDPRESS_LOGGED_IN_SALT: "}fwy<?*r<u7yHE[aoKiZWG9/W}OoPTiB,X|[s}Lf]YFqSEQ]WEl3yV;?FcjH/9_P"
-  WORDPRESS_NONCE_SALT: "m>eY]oq,F2/;lU@6*YO/@mVm%kx3:^81]k46d%J)cY!|t{E_#2FhQX]A}_5}1lM`"
+  WORDPRESS_AUTH_KEY: ""
+  WORDPRESS_SECURE_AUTH_KEY: ""
+  WORDPRESS_LOGGED_IN_KEY: ""
+  WORDPRESS_NONCE_KEY: ""
+  WORDPRESS_AUTH_SALT: ""
+  WORDPRESS_SECURE_AUTH_SALT: ""
+  WORDPRESS_LOGGED_IN_SALT: ""
+  WORDPRESS_NONCE_SALT: ""
+
 ## Dependencies
 percona-xtradb-cluster:
   enabled: true
@@ -89,14 +86,14 @@ percona-xtradb-cluster:
   replicas: 2
   mysqlUser: wordpress
   mysqlDatabase: wordpress
-  mysqlPassword: "4qIP58G7tcDUfHMgXTW20x0d"
-  mysqlRootPassword: "3755GuzWP6dFubm3g3mY3Pwn"
-  xtraBackupPassword: "8juqGFajT9aBmyOS3jQ3UXeO"
+  mysqlPassword: ""
+  mysqlRootPassword: ""
+  xtraBackupPassword: ""
   persistence:
-    enabled: true
-    storageClass: nfs-04
-    size: 64Gi
-  metricsExporter: true
+    enabled: false
+    storageClass: "-"
+    size: 8Gi
+  metricsExporter: false
 
 nfs-server-provisioner:
   enabled: true
@@ -113,7 +110,8 @@ nfs-server-provisioner:
     rpcbindPort: 51413
     externalIPs: []
   persistence:
-    enabled: true
+    # this is persistence for the nfs server 'under the hood'
+    enabled: false
     storageClass: "-"
     accessMode: ReadWriteOnce
     size: 32Gi
