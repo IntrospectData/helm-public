@@ -29,7 +29,7 @@ ingress:
   annotations:
     ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-    kubernetes.io/ingress.class: nginx-private-test
+    kubernetes.io/ingress.class: nginx-public
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
@@ -45,7 +45,7 @@ persistence:
   enabled: true
   # this doesn't matter if nfs-server-provisioner creates a
   # storageClass - i.e. it will defer to that value if it's created
-  storageClass: "nfs-04"
+  storageClass: "nfs-03"
   accessMode: ReadWriteMany
   size: 32Gi
 
@@ -89,21 +89,28 @@ secrets:
 percona-xtradb-cluster:
   enabled: true
   image:
-    tag: 5.7.19
-  replicas: 2
+    tag: 5.7.19 # 5.7.22
+  replicas: 3
   mysqlUser: wordpress
   mysqlDatabase: wordpress
   mysqlPassword: "4qIP58G7tcDUfHMgXTW20x0d"
   mysqlRootPassword: "3755GuzWP6dFubm3g3mY3Pwn"
   xtraBackupPassword: "8juqGFajT9aBmyOS3jQ3UXeO"
+  # allowRootFrom: "127.0.0.1"
+  # mysqlAllowEmptyPassword: true
   persistence:
-    enabled: false
-    storageClass: nfs-04
+    enabled: true
+    storageClass: nfs-03
     size: 64Gi
-  metricsExporter: true
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+  metricsExporter: false
+  logTail: true
 
 nfs-server-provisioner:
-  enabled: true
+  enabled: false
   replicaCount: 1
   # imagePullSecrets:
   image:
@@ -123,7 +130,7 @@ nfs-server-provisioner:
     accessMode: ReadWriteOnce
     size: 32Gi
   storageClass:
-    create: true
+    create: false
     defaultClass: false
     name: nfs-wp
   rbac:

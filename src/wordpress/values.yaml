@@ -92,7 +92,7 @@ percona-xtradb-cluster:
   persistence:
     enabled: false
     storageClass: "-"
-    size: 8Gi
+    size: 32Gi
   metricsExporter: false
 
 nfs-server-provisioner:
@@ -111,7 +111,7 @@ nfs-server-provisioner:
     externalIPs: []
   persistence:
     # this is persistence for the nfs server 'under the hood'
-    enabled: false
+    enabled: true
     storageClass: "-"
     accessMode: ReadWriteOnce
     size: 32Gi
