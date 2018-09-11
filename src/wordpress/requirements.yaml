@@ -2,8 +2,10 @@ dependencies:
 - name: percona-xtradb-cluster
   version: 0.1.5
   repository: https://kubernetes-charts.storage.googleapis.com/
-  condition: percona-xtradb-cluster.enabled,global.percona-xtradb-cluster.enabled
+  tags:
+    - database
 - name: nfs-server-provisioner
   version: 0.1.5
   repository: https://kubernetes-charts.storage.googleapis.com/
-  condition: nfs-server-provisioner.enabled,global.nfs-server-provisioner.enabled
+  tags: 
+    - storage

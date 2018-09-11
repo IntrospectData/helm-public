@@ -79,8 +79,11 @@ secrets:
   WORDPRESS_NONCE_SALT: ""
 
 ## Dependencies
+tags:
+  database: true
+  storage: true
+
 percona-xtradb-cluster:
-  enabled: true
   image:
     tag: 5.7.19
   replicas: 2
@@ -96,7 +99,6 @@ percona-xtradb-cluster:
   metricsExporter: false
 
 nfs-server-provisioner:
-  enabled: true
   replicaCount: 1
   # imagePullSecrets:
   image:
