@@ -39,12 +39,14 @@ spec:
                 name: {{ template "id-wordpress.fullname" . }}-wp
             - secretRef:
                 name: {{ template "id-wordpress.fullname" . }}-wp
+{{- if .Values.tags.database }}
           env:
             - name: WORDPRESS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-pxc
                   key: mysql-password
+{{- end }}
           ports:
             - name: http
               containerPort: 80

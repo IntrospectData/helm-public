@@ -30,44 +30,6 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ template "id-wordpress.fullname" . }}-wp-config
-  labels:
-    app: {{ template "id-wordpress.name" . }}
-    chart: {{ template "id-wordpress.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-data:
-  wp-config-common.php: |
-    <?php
-    define('WP_ALLOW_MULTISITE', true );
-    define('MULTISITE', true);
-    define('SUBDOMAIN_INSTALL', true);
-{{- if and .Values.wp .Values.wp.domain }}
-    define('DOMAIN_CURRENT_SITE', '{{- .Values.wp.domain }}');
-{{- end }}
-    define('PATH_CURRENT_SITE', '/');
-    define('SITE_ID_CURRENT_SITE', 1);
-    define('BLOG_ID_CURRENT_SITE', 1);
-  htaccess: |
-    <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.php$ - [L]
-
-    # add a trailing slash to /wp-admin
-    RewriteRule ^wp-admin$ wp-admin/ [R=301,L]
-
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [L]
-    RewriteRule ^(wp-(content|admin|includes).*) $1 [L]
-    RewriteRule ^(.*\.php)$ $1 [L]
-    RewriteRule . index.php [L]
-    </IfModule>
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
   name: {{ template "id-wordpress.fullname" . }}-wp
   labels:
     app: {{ template "id-wordpress.name" . }}
@@ -75,10 +37,14 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-{{- if (index .Values "percona-xtradb-cluster" "enabled") }}
+{{- if .Values.tags.database }}
   WORDPRESS_DB_HOST: {{ .Release.Name }}-pxc.{{ .Release.Namespace }}:3306
   WORDPRESS_DB_USER: {{ index .Values "percona-xtradb-cluster" "mysqlUser" }}
   WORDPRESS_DB_NAME: {{ index .Values "percona-xtradb-cluster" "mysqlDatabase" }}
+{{- else }}
+  WORDPRESS_DB_HOST: {{ .Values.externalDB.host | quote }}
+  WORDPRESS_DB_USER: {{ .Values.externalDB.name | quote }}
+  WORDPRESS_DB_NAME: {{ .Values.externalDB.user | quote }}
 {{- end }}
 {{- if .Values.env }}
 {{ toYaml .Values.env | indent 2 }}
