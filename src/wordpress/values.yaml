@@ -35,12 +35,12 @@ ingress:
     # nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
     # nginx.ingress.kubernetes.io/session-cookie-hash: "md5"
   path: /
-  hosts:
-    - domain.tld
-  tls:
-    - secretName: domain-tld-tls
-      hosts:
-        - domain.tld
+  #hosts:
+  #  - domain.tld
+  #tls:
+  #  - secretName: domain-tld-tls
+  #    hosts:
+  #      - domain.tld
 persistence:
   enabled: true
   storageClass: "-" # specified value only works if nfs-server-provisioner is disabled or does not create a storageClass
