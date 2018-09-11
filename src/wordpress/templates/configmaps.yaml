@@ -43,8 +43,8 @@ data:
   WORDPRESS_DB_NAME: {{ index .Values "percona-xtradb-cluster" "mysqlDatabase" }}
 {{- else }}
   WORDPRESS_DB_HOST: {{ .Values.externalDB.host | quote }}
-  WORDPRESS_DB_USER: {{ .Values.externalDB.name | quote }}
-  WORDPRESS_DB_NAME: {{ .Values.externalDB.user | quote }}
+  WORDPRESS_DB_USER: {{ .Values.externalDB.user | quote }}
+  WORDPRESS_DB_NAME: {{ .Values.externalDB.name | quote }}
 {{- end }}
 {{- if .Values.env }}
 {{ toYaml .Values.env | indent 2 }}
