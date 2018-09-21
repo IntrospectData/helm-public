@@ -44,8 +44,8 @@ spec:
             - name: WORDPRESS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}-pxc
-                  key: mysql-password
+                  name: {{ .Release.Name }}-mariadb
+                  key: mariadb-password
 {{- end }}
           ports:
             - name: http

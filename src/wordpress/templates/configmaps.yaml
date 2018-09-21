@@ -38,9 +38,9 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
 {{- if .Values.tags.database }}
-  WORDPRESS_DB_HOST: {{ .Release.Name }}-pxc.{{ .Release.Namespace }}:3306
-  WORDPRESS_DB_USER: {{ index .Values "percona-xtradb-cluster" "mysqlUser" }}
-  WORDPRESS_DB_NAME: {{ index .Values "percona-xtradb-cluster" "mysqlDatabase" }}
+  WORDPRESS_DB_HOST: {{ .Release.Name }}-mariadb.{{ .Release.Namespace }}:3306
+  WORDPRESS_DB_USER: {{ index .Values "mariadb" "db" "user" }}
+  WORDPRESS_DB_NAME: {{ index .Values "mariadb" "db" "name" }}
 {{- else }}
   WORDPRESS_DB_HOST: {{ .Values.externalDB.host | quote }}
   WORDPRESS_DB_USER: {{ .Values.externalDB.user | quote }}

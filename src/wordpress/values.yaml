@@ -22,28 +22,28 @@ php:
 
 ingress:
   enabled: true
-  annotations: {}
+  annotations:
     ## allow larger uploads/requests than default 2m
-    # nginx.ingress.kubernetes.io/proxy-body-size: "256m"
-    # kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
+    kubernetes.io/ingress.class: nginx-public
     ## cert-manager for ACME/LetsEncrypt - autogenerate cert
-    # kubernetes.io/tls-acme: "true"
+    kubernetes.io/tls-acme: "true"
     ## Force SSL redirects for nginx-ingress
-    # ingress.kubernetes.io/force-ssl-redirect: "true"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
     ## sticky sessions with nginx-ingress
-    # nginx.ingress.kubernetes.io/affinity: "cookie"
-    # nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
-    # nginx.ingress.kubernetes.io/session-cookie-hash: "md5"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "wplbsession"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "md5"
   path: /
-  #hosts:
-  #  - domain.tld
-  #tls:
-  #  - secretName: domain-tld-tls
-  #    hosts:
-  #      - domain.tld
+  hosts:
+    - wpdev.introspectdev.io
+  tls:
+    - secretName: wpdev-introspectdev-io
+      hosts:
+        - wpdev.introspectdev.io
 persistence:
   enabled: true
-  storageClass: "-" # specified value only works if nfs-server-provisioner is disabled or does not create a storageClass
+  storageClass: "nfs-03" # specified value only works if nfs-server-provisioner is disabled or does not create a storageClass
   accessMode: ReadWriteMany
   size: 32Gi
 
@@ -69,34 +69,50 @@ env:
 
 # you can get 'fresh salt' from here: https://api.wordpress.org/secret-key/1.1/salt/
 secrets:
-  WORDPRESS_AUTH_KEY: ""
-  WORDPRESS_SECURE_AUTH_KEY: ""
-  WORDPRESS_LOGGED_IN_KEY: ""
-  WORDPRESS_NONCE_KEY: ""
-  WORDPRESS_AUTH_SALT: ""
-  WORDPRESS_SECURE_AUTH_SALT: ""
-  WORDPRESS_LOGGED_IN_SALT: ""
-  WORDPRESS_NONCE_SALT: ""
+  # generated from https://roots.io/salts.html
+  WORDPRESS_AUTH_KEY: "h093YA`oLgpOKw=k%%zi9-kq}=!+HSEI5if/t,uz{I92.Pd#^]+SmB$M6oD!L`Lh"
+  WORDPRESS_SECURE_AUTH_KEY: "#XtP<k^,cAv*2]IekeOJCmRcztD-/AW;^R)<L0n+re!ql?}9ITIUb_vxn=9+#d?3"
+  WORDPRESS_LOGGED_IN_KEY: "Vl0+h:4Y7i?]wX+T1|`-]P:U}2BwigT|<5_Kok)^a13mS)t)>bht?[%C+*snYfbS"
+  WORDPRESS_NONCE_KEY: "`3a[/^F}i#lWp2%vW`26fH(OE)v1w#E@miD<{HkhUh*6u8YA]an{]:7K$N(%O/TY"
+  WORDPRESS_AUTH_SALT: "kf%`_D!oQ5e/4s-SX/-yaE*BF15YRHmu7nMBi$jISRI`7E)!VdvX4Jyw^dbJ1Z(l"
+  WORDPRESS_SECURE_AUTH_SALT: ":a>aDK[SPl.s^YPUZ;b4$>tI[BdX0OK^qo)0yq@tLt&9Jm.6O{a!R_%/-0_-y&%c"
+  WORDPRESS_LOGGED_IN_SALT: ">6`3@@UpMg0X{z[B.:h/wm*GkGsE},%7TB8|{%}lfp$l}YE8nHN63ZAZVbN5kBn@"
+  WORDPRESS_NONCE_SALT: "7I5A7U(XK(<6lO;*;ke&vU^5.e30m+IyJjp+T8D2]+$)e}*RKK(#S$4TQXF5=Rr]"
 
 ## Dependencies
 tags:
   database: true
-  storage: true
+  storage: false
 
-percona-xtradb-cluster:
-  image:
-    tag: 5.7.19
-  replicas: 2
-  mysqlUser: wordpress
-  mysqlDatabase: wordpress
-  mysqlPassword: ""
-  mysqlRootPassword: ""
-  xtraBackupPassword: ""
-  persistence:
-    enabled: false
-    storageClass: "-"
-    size: 32Gi
-  metricsExporter: false
+mariadb:
+  db:
+    user: wordpress
+    password: 4qIP58G7tcDUfHMgXTW20x0d
+    name: wordpress
+    forcePassword: true
+  rootUser:
+    password: 3755GuzWP6dFubm3g3mY3Pwn
+    forcePassword: true
+  replication:
+    enabled: true
+    user: replicator
+    password: 8juqGFajT9aBmyOS3jQ3UXeO
+    forcePassword: true
+  master:
+    persistence:
+      enabled: true
+      storageClass: "nfs-03"
+      accessModes:
+        - ReadWriteOnce
+      size: 32Gi
+  slave:
+    replicas: 1
+    persistence:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      storageClass: "nfs-02"
+      size: 32Gi
 
 nfs-server-provisioner:
   replicaCount: 1
@@ -109,7 +125,7 @@ nfs-server-provisioner:
     externalIPs: []
   persistence:
     # this is persistence for the nfs server 'under the hood'
-    enabled: true
+    enabled: false
     storageClass: "-"
     accessMode: ReadWriteOnce
     size: 32Gi

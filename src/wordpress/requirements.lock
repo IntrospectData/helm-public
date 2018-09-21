@@ -1,9 +1,9 @@
 dependencies:
-- name: percona-xtradb-cluster
-  repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 0.1.5
 - name: nfs-server-provisioner
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 0.1.5
-digest: sha256:1b3ce3e5f0363dc7fed0b80402af181d51e8e869d0d0e606e17fd29ef328abc8
-generated: 2018-09-04T12:06:57.920486751-07:00
+- name: mariadb
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 5.0.0
+digest: sha256:a038d04a6a4098924761e0eb2c47ad6463ba978edd5f75da90c57cb3a8c464f2
+generated: 2018-09-20T10:46:54.575325648-07:00
