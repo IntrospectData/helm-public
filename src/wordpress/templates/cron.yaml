@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "id-wordpress.fullname" . }}
+  labels:
+    app: {{ template "id-wordpress.name" . }}
+    chart: {{ template "id-wordpress.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: {{ .Values.cron.schedule | quote }}
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit:: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: wp-cron
+            image: "{{ .Values.cron.image.repository }}:{{ .Values.cron.image.tag }}"
+            args:
+            - "--header"
+            - "'Host: {{ .Values.cron.hostname }}'"
+            - "http://{{ template "id-wordpress.fullname" . }}.{{ .Release.namespace }}:80/wp-cron.php?doing_wp_cron"
+            - "-vv"
+          restartPolicy: OnFailure

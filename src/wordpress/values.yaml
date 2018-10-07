@@ -20,6 +20,13 @@ php:
   max-upload-size: 256M # should correspond to what you configure for your ingress
   additional-ini: "" # ability to add multi-line string with additional php.ini contents
 
+cron:
+  schedule: "*/5 * * * *"
+  hostname: wpdev.introspectdev.io
+  image:
+    repository: introspectdata/alpine-curl
+    tag: latest
+
 ingress:
   enabled: true
   annotations:
