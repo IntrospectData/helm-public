@@ -3,7 +3,27 @@ entries:
   wordpress:
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.239139941-07:00
+    created: 2018-10-07T08:04:44.876184351-07:00
+    description: A combined helm chart to deploy a highly scalable wordpress environment
+      using perconadb
+    digest: 3b9a246d034eb7973f9145e4c7f544ab2f6bb0befb969c0b27916ab59464edd2
+    home: https://github.com/IntrospectData/helm-public/tree/master/src/wordpress
+    icon: https://introspectdata.com/wp-content/uploads/2018/07/graphonly-orange-75px.png
+    maintainers:
+    - email: pmdev@introspectdata.com
+      name: Patrick McClory
+      url: https://introspectdata.com
+    name: wordpress
+    sources:
+    - https://github.com/helm/charts/tree/master/stable/wordpress
+    - https://github.com/helm/charts/tree/master/stable/mariadb
+    - https://github.com/helm/charts/tree/master/stable/nfs-server-provisioner
+    urls:
+    - charts/wordpress-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v1
+    appVersion: 4.9.8
+    created: 2018-10-07T08:04:44.874943047-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: caa03736575a62166d3239d6e7e470cf238242145074bcc1c33d32446459986b
@@ -23,7 +43,7 @@ entries:
     version: 0.2.3
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.237880462-07:00
+    created: 2018-10-07T08:04:44.873511718-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: ac15b77b5f455a6155bc493698a1592b4119daefa93d333ada60187603a91587
@@ -43,7 +63,7 @@ entries:
     version: 0.2.2
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.216431788-07:00
+    created: 2018-10-07T08:04:44.854520474-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: a0d60dbe7ef34b02576cd11d457b548c1cb42e1808ac3595f4cd24a7d7a7f381
@@ -63,7 +83,7 @@ entries:
     version: 0.1.11
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.214239008-07:00
+    created: 2018-10-07T08:04:44.852589469-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: c972c68b83e37ab611931eed1b3a0776089eeaf8c97a06465d9493679b62c424
@@ -83,7 +103,7 @@ entries:
     version: 0.1.10
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.235498473-07:00
+    created: 2018-10-07T08:04:44.871085252-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: ab8539aa8763ab7bbfdeaa7f9962b2346627855da795b65bbd309ab6a57148fe
@@ -103,7 +123,7 @@ entries:
     version: 0.1.9
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.233731602-07:00
+    created: 2018-10-07T08:04:44.869282475-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: 9641049de44906fbc9b6e58494bdf3f16504d32732a56b7af29ce5adaf66a6a5
@@ -123,7 +143,7 @@ entries:
     version: 0.1.8
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.230342737-07:00
+    created: 2018-10-07T08:04:44.867298803-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: 96297608a0aa5c06c1da1943dad5285b1fdf49d3132db19d9ddc217107eaead3
@@ -143,7 +163,7 @@ entries:
     version: 0.1.7
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.22788119-07:00
+    created: 2018-10-07T08:04:44.865483812-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: 451de0b8062e6d5e464e57a07c20b32db72ee6ec06f59a1fdc5988875c452005
@@ -163,7 +183,7 @@ entries:
     version: 0.1.6
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.22520609-07:00
+    created: 2018-10-07T08:04:44.862538847-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: 27d1b883a4e135b46bc6938da76f3405215502962f8ca6b83cd2c4454be17072
@@ -183,7 +203,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.2227401-07:00
+    created: 2018-10-07T08:04:44.860824529-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: a6f64116034142485d85a6b9fcbb2e57abdf7f0a4a47fe77a40cdfa6e1b92019
@@ -203,7 +223,7 @@ entries:
     version: 0.1.4
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.22062003-07:00
+    created: 2018-10-07T08:04:44.858362041-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: 0e2fdc8facdd5ded0641b10361132dc988438e99391db6c4d53ece6923b67f9e
@@ -223,7 +243,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: 4.9.8
-    created: 2018-10-07T08:00:10.218329828-07:00
+    created: 2018-10-07T08:04:44.85673157-07:00
     description: A combined helm chart to deploy a highly scalable wordpress environment
       using perconadb
     digest: bf5929b1cfd4c72afd500283c17c5445c1c7c4ea5219a6bda4ffc9292e5dc179
@@ -241,4 +261,4 @@ entries:
     urls:
     - charts/wordpress-0.1.2.tgz
     version: 0.1.2
-generated: 2018-10-07T08:00:10.212018114-07:00
+generated: 2018-10-07T08:04:44.84956537-07:00

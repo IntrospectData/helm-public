@@ -63,7 +63,7 @@ spec:
               subPath: php.ini
             - name: wp-config
               mountPath: /var/www/wp_config.php
-              subPath: wp_config.php
+              subPath: wp-config.php
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

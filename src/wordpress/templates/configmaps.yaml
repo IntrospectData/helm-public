@@ -54,10 +54,11 @@ data:
 {{- if .Values.env }}
 {{ toYaml .Values.env | indent 2 }}
 {{- end }}
+---
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ template "id-wordpress.fullname" . }}-wp
+  name: {{ template "id-wordpress.fullname" . }}-wp-config
   labels:
     app: {{ template "id-wordpress.name" . }}
     chart: {{ template "id-wordpress.chart" . }}
