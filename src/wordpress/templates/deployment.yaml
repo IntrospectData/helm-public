@@ -22,7 +22,7 @@ spec:
       volumes:
         - name: wp-config
           configMap:
-            name: {{ template "id-wordpress.fullname" . }}-wp_config
+            name: {{ template "id-wordpress.fullname" . }}-wp-config
         - name: php-ini
           configMap:
             name:  {{ template "id-wordpress.fullname" . }}-php
